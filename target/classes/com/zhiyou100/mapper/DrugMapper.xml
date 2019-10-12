@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhiyou100.mapper.DrugMapper">
+	<select id="count" parameterType="String" resultType="int">
+		select count(*) from drug
+		<where>
+			<if test="keyword1 != null and keyword1 != ''">
+				drug_num like '%${keyword1}%'
+			</if>
+			<if test="keyword2 != null and keyword2 != ''">
+				and drug_type like '%${keyword2}%'
+			</if>
+			
+		</where>
+	</select>
+	
+	<select id="findAll" parameterType="Map" resultType="Drug">
+		select * from drug
+		<where>
+			<if test="keyword1 != null and keyword1 != ''">
+				drug_num like '%${keyword1}%'
+			</if>
+			<if test="keyword2 != null and keyword2 != ''">
+				and drug_type like '%${keyword2}%'
+			</if>
+		</where>
+		limit #{start},#{end}
+	</select>
+	
+	<select id="updateDrug" parameterType="String" resultType="Drug">
+		select * from drug where drug_num = #{drug_num}
+	</select>
+	<update id="updateById" parameterType="Drug">
+		update drug set drug_url = #{drug_url},purchas_price = #{purchas_price},sale_price = #{sale_price},drug_name = #{drug_name},drug_type = #{drug_type},simple_detail = #{simple_detail},prodeced_date = #{prodeced_date},expiration_date = #{expiration_date},quality_date = #{quality_date},detail = #{detail},manufacture = #{manufacture},use_infor = #{use_infor},total_stock = #{total_stock},surplus = #{surplus},status = #{status},noted = #{noted} where drug_num = #{drug_num}
+	</update>
+	
+	
+	
+	
+	
+	<select id="drugLookById" parameterType="String" resultType="Drug">
+		select * from drug where drug_num = #{drug_num}
+	</select>
+	
+	
+	<insert id="insertDrug" parameterType="Drug">
+	insert into drug( drug_num ,drug_url,purchas_price,sale_price,drug_name,drug_type,simple_detail,prodeced_date,expiration_date ,quality_date,detail,manufacture,use_infor, total_stock,surplus ,status ,noted ) values (#{drug_num},#{drug_url},#{purchas_price},#{sale_price},#{drug_name}, #{drug_type},#{simple_detail}, #{prodeced_date},#{expiration_date}, #{quality_date}, #{detail}, #{manufacture}, #{use_infor}, #{total_stock},#{surplus}, #{status}, #{noted} )
+	</insert>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+</mapper>

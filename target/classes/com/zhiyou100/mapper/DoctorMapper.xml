@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhiyou100.mapper.DoctorMapper">
+<!-- 医生对证件,科室 -->
+<resultMap type="Doctor" id="docAndsec">
+	<id column="did" property="id"/>
+	<result column="dname" property="name"/>
+	<result column="certificate_type" property="certificate_type"/>
+	<result column="ID_num" property="ID_num"/>
+	<result column="phone" property="phone"/>
+	<result column="special_plane" property="special_plane"/>
+	<result column="sex" property="sex"/>
+	<result column="age" property="age"/>
+	<result column="birther" property="birther"/>
+	<result column="email" property="email"/>
+	<result column="section_id" property="section_id"/>
+	<result column="education" property="education"/>
+	<result column="noted" property="noted"/>
+<association property="section" javaType="Section">
+	<id column="sid" property="id"/>
+	<result column="seccp_num" property="seccp_num"/>
+	<result column="secco_name" property="secco_name"/>
+</association>
+<association property="certificate" javaType="Certificate_type">
+	<id column="cid" property="id"/>
+	<result column="cname" property="name"/>
+</association>
+
+</resultMap>
+<select id="findAllDoc" resultMap="docAndsec" parameterType="Map">
+	select 
+	d.id did ,d.name dname, d.certificate_type, d.ID_num, d.phone, d.special_plane, d.sex, d.age, d.birther, d.email, d.section_id, d.education, d.noted, 
+	s.id sid, s.seccp_num, s.secco_name, 
+	c.id cid, c.name cname  
+	from doctor d , section s, certificate_type c
+		<where>
+		d.section_id = s.id  and d.certificate_type = c.id
+		<if test="keyword != null and keyword != ''">
+			 and d.id like '%${keyword}%'
+		</if>
+		<if test="keyword2 != null and keyword2 != ''">
+			 and d.name like '%${keyword2}%'
+		</if>
+		<if test="keyword3 != null and keyword3 != ''">
+			 and d.section_id like '%${keyword3}%'
+		</if>
+	</where>
+</select>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <select id="count" parameterType="String" resultType="int">
+	select count(*) from doctor
+	<where>
+		<if test="keyword != null and keyword != ''">
+			 and d.id like '%${keyword}%'
+		</if>
+		<if test="keyword2 != null and keyword2 != ''">
+			 and d.name like '%${keyword2}%'
+		</if>
+		<if test="keyword3 != null and keyword3 != ''">
+			 and d.section_id like '%${keyword3}%'
+		</if>
+	</where>
+</select> -->
+<!-- <select id="count" parameterType="Map" resultType="int">
+	select count(*) from doctor d
+	<where>
+		<if test="keyword != null and keyword != ''">
+			 and d.id like '%${keyword}%'
+		</if>
+		<if test="keyword2 != null and keyword2 != ''">
+			 and d.name like '%${keyword2}%'
+		</if>
+		<if test="keyword3 != null and keyword3 != ''">
+			 and d.section_id like '%${keyword3}%'
+		</if>
+	</where>
+</select> -->
+
+
+
+
+
+
+<select id="findLook" parameterType="int" resultType="Doctor">
+	select * from doctor where id = #{id}
+</select>
+
+
+
+
+
+<delete id="deleteDoctorById" parameterType="int">
+	delete from doctor where id = #{id}
+</delete>
+
+
+
+
+
+
+<select id="update" parameterType="int" resultType="Doctor">
+	select * from doctor where id = #{id}
+</select>
+<update id="updateDoctorById" parameterType="Doctor">
+	update doctor set name = #{name}, certificate_type = #{certificate_type}, ID_num = #{ID_num}, phone = #{phone}, special_plane = #{special_plane}, sex = #{sex}, age = #{age}, birther = #{birther}, email = #{email}, section_id = #{section_id}, education = #{education}, noted = #{noted} where id = #{id}
+</update>
+
+
+<insert id="insertDoctor" parameterType="Doctor">
+	insert into doctor (name, certificate_type, ID_num, phone, special_plane, sex,age,birther, email, section_id, education, noted) values(#{name}, #{certificate_type}, #{ID_num}, #{phone}, #{special_plane}, #{sex}, #{age}, #{birther}, #{email}, #{section_id}, #{education}, #{noted} )
+</insert>
+
+
+
+
+
+
+
+
+<update id="updateMulti" parameterType="int">
+	update doctor set name = #{name}, certificate_type = #{certificate_type}, ID_num = #{ID_num}, phone = #{phone}, special_plane = #{special_plane}, sex = #{sex}, age = #{age}, birther = #{birther}, email = #{email}, section_id = #{section_id}, education = #{education}, noted = #{noted} where id = #{id}
+</update>
+
+</mapper> 

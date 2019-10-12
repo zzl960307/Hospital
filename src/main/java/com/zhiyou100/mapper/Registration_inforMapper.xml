@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhiyou100.mapper.Registration_inforMapper">
+<!-- 病例对医生,科室,证件 -->
+<resultMap type="Registration_infor" id="regAndDocAndSecAndCer">
+	<id column="medical_record" property="medical_record"/>
+	<result column="r_name" property="name"/>
+	<result column="r_certificate_type" property="certificate_type"/>
+	<result column="r_ID_num" property="ID_num"/>
+	<result column="social_safe_num" property="social_safe_num"/>
+	<result column="r_phone" property="phone"/>
+	<result column="self_paying" property="self_paying"/>
+	<result column="r_sex" property="sex"/>
+	<result column="career" property="career"/>
+	<result column="early_appointment" property="early_appointment"/>
+	<result column="doctor_id" property="doctor_id"/>
+	<result column="r_status" property="status"/>
+	<result column="r_noted" property="noted"/>
+	<result column="time" property="time"/>
+	<result column="r_section_id" property="section_id"/>
+	<result column="age" property="age"/>
+	<result column="registration_fee" property="registration_fee"/>
+<association property="doctor" javaType="Doctor">
+	<id column="did" property="id"/>
+	<result column="dname" property="name"/>
+	<result column="certificate_type" property="certificate_type"/>
+	<result column="ID_num" property="ID_num"/>
+	<result column="dphone" property="phone"/>
+	<result column="special_plane" property="special_plane"/>
+	<result column="dsex" property="sex"/>
+	<result column="dage" property="age"/>
+	<result column="birther" property="birther"/>
+	<result column="email" property="email"/>
+	<result column="dsection_id" property="section_id"/>
+	<result column="education" property="education"/>
+	<result column="dnoted" property="noted"/>
+</association>
+<association property="section" javaType="Section">
+	<id column="sid" property="id"/>
+	<result column="seccp_num" property="seccp_num"/>
+	<result column="secco_name" property="secco_name"/>
+</association>
+<association property="certificate" javaType="Certificate_type">
+	<id column="cid" property="id"/>
+	<result column="cname" property="name"/>
+</association>
+</resultMap>	
+	
+
+<select id="findAll" parameterType="Map" resultMap="regAndDocAndSecAndCer">
+	SELECT 
+	r.medical_record,
+	r.name r_name,
+	r.certificate_type r_certificate_type,
+	r.ID_num r_ID_num,
+	r.social_safe_num,
+	r.time,
+	r.phone r_phone,
+	r.self_paying,
+	r.sex r_sex,
+	r.career,
+	r.early_appointment,
+	r.doctor_id,
+	r.STATUS r_status,
+	r.noted r_noted,
+	r.section_id r_section_id,
+	r.age r_age,
+	r.registration_fee,
+	d.id did,
+	d.name dname,
+	d.certificate_type,
+	d.ID_num,
+	d.phone dphone,
+	d.special_plane,
+	d.sex dsex,
+	d.age dage,
+	d.birther,
+	d.email,
+	d.section_id dsection_id,
+	d.education,
+	d.noted dnoted,
+	s.id sid,
+	s.seccp_num,
+	s.secco_name,
+	c.id cid,
+	c.name cname 
+FROM 
+	registration_infor r,
+	doctor d,
+	section s,
+	certificate_type c 
+	<where> 
+r.section_id = s.id 
+AND r.doctor_id = d.id 
+AND r.certificate_type = c.id 
+		<if test="keyword1 !='' and keyword1 != null">
+			and r.medical_record like '%${keyword1}%'
+		</if>
+		
+		<if test="keyword2 !='' and keyword2 != null">
+			and d.name like '%${keyword2}%'
+		</if>
+		
+		<if test="keyword3 !='' and keyword3 != null">
+			and s.secco_name like '%${keyword3}%'
+		</if>
+		
+		<if test="keyword4 !='' and keyword4 != null">
+			and r.time &gt; '${keyword4}'
+		</if>
+		
+		<if test="keyword5 !='' and keyword5 != null">
+			and r.time &lt; '${keyword5}'
+		</if>
+	</where>
+	
+</select>
+
+
+
+
+
+
+<select id="regLookById" parameterType="String" resultType="Registration_infor">
+	select * from registration_infor where medical_record = #{medical_record}
+</select>
+
+
+
+
+<insert id="insertRegistration_infor" parameterType="Registration_infor">
+	insert into registration_infor
+	 (medical_record,name, certificate_type, ID_num, social_safe_num, phone, self_paying, sex, career, early_appointment, doctor_id, status, section_id, age, registration_fee, noted)
+	  values(#{medical_record}, #{name}, #{certificate_type}, #{ID_num}, #{social_safe_num}, #{phone}, #{self_paying}, #{sex}, #{career}, #{early_appointment}, #{doctor_id}, #{status}, #{section_id}, #{age}, #{registration_fee}, #{noted})
+</insert>
+
+
+
+
+
+
+<delete id="deleteRegistration_infor" parameterType="String">
+	delete from registration_infor where medical_record = #{medical_record}
+</delete>
+
+
+
+<select id="updateById" parameterType="String" resultType="Registration_infor">
+	select * from registration_infor where medical_record = #{medical_record}
+</select>
+
+<update id="updateRegistration_infor" parameterType="Registration_infor">
+	update registration_infor set 
+	name = #{name}, certificate_type =  #{certificate_type},
+	 ID_num = #{ID_num}, social_safe_num = #{social_safe_num},
+	  phone = #{phone}, self_paying = #{self_paying},
+	   sex = #{sex}, career = #{career},
+	    early_appointment = #{early_appointment}, doctor_id = #{doctor_id},
+	     status = #{status}, section_id = #{section_id},
+	      age = #{age}, registration_fee = #{registration_fee},noted = #{noted} where medical_record = #{medical_record}
+</update>
+
+
+
+
+
+
+
+
+
+</mapper>

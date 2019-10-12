@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhiyou100.mapper.Hospital_inforMapper">
+<resultMap type="Hospital_infor" id="hosAndDocAndSecAndReg">
+	<id column="medical_record" property="medical_record"/>
+	<result column="caregiver" property="caregiver"/>
+	<result column="bed_id" property="bed_id"/>
+	<result column="pay_the_deposit" property="pay_the_deposit"/>
+	<result column="state_illness" property="state_illness"/>
+<association property="registration" javaType="Registration_infor">
+	<id column="medical_record" property="medical_record"/>
+	<result column="r_name" property="name"/>
+	<result column="r_certificate_type" property="certificate_type"/>
+	<result column="r_ID_num" property="ID_num"/>
+	<result column="social_safe_num" property="social_safe_num"/>
+	<result column="r_phone" property="phone"/>
+	<result column="self_paying" property="self_paying"/>
+	<result column="r_sex" property="sex"/>
+	<result column="career" property="career"/>
+	<result column="early_appointment" property="early_appointment"/>
+	<result column="doctor_id" property="doctor_id"/>
+	<result column="r_status" property="status"/>
+	<result column="r_noted" property="noted"/>
+	<result column="time" property="time"/>
+	<result column="r_section_id" property="section_id"/>
+	<result column="age" property="age"/>
+	<result column="registration_fee" property="registration_fee"/>
+</association>
+<association property="doctor" javaType="Doctor">
+	<id column="did" property="id"/>
+	<result column="dname" property="name"/>
+	<result column="certificate_type" property="certificate_type"/>
+	<result column="ID_num" property="ID_num"/>
+	<result column="dphone" property="phone"/>
+	<result column="special_plane" property="special_plane"/>
+	<result column="dsex" property="sex"/>
+	<result column="dage" property="age"/>
+	<result column="birther" property="birther"/>
+	<result column="email" property="email"/>
+	<result column="dsection_id" property="section_id"/>
+	<result column="education" property="education"/>
+	<result column="dnoted" property="noted"/>
+</association>
+<association property="section" javaType="Section">
+	<id column="sid" property="id"/>
+	<result column="seccp_num" property="seccp_num"/>
+	<result column="secco_name" property="secco_name"/>
+</association>
+</resultMap>
+<select id="findAll" resultMap="hosAndDocAndSecAndReg" parameterType="Map">
+	SELECT
+	h.medical_record,
+	h.caregiver,
+	h.bed_id,
+	h.pay_the_deposit,
+	h.state_illness,
+	r.medical_record,
+	r.name r_name,
+	r.certificate_type r_certificate_type,
+	r.ID_num r_ID_num,
+	r.social_safe_num,
+	r.time,
+	r.phone r_phone,
+	r.self_paying,
+	r.sex r_sex,
+	r.career,
+	r.early_appointment,
+	r.doctor_id,
+	r.STATUS r_status,
+	r.noted r_noted,
+	r.section_id r_section_id,
+	r.age r_age,
+	r.registration_fee,
+	d.id did,
+	d.name dname,
+	d.certificate_type,
+	d.ID_num,
+	d.phone dphone,
+	d.special_plane,
+	d.sex dsex,
+	d.age dage,
+	d.birther,
+	d.email,
+	d.section_id dsection_id,
+	d.education,
+	d.noted dnoted,
+	s.id sid,
+	s.seccp_num,
+	s.secco_name 
+FROM	
+	hospital_infor h,
+	registration_infor r,
+	doctor d,
+	section s
+	<where>
+	h.medical_record = r.medical_record
+	AND r.section_id = s.id 
+	AND r.doctor_id = d.id 
+		<if test="keyword1 !='' and keyword1 != null">
+			and h.medical_record like '%${keyword1}%'
+		</if>
+	</where>
+	limit #{start} ,#{end}
+</select>
+
+
+<select id="count" parameterType="String" resultType="int">
+	select count(*) from hospital_infor
+	<where> 
+		<if test="keyword1 !='' and keyword1 != null">
+			h.medical_record like '%${keyword1}%'
+		</if>
+
+	</where>
+</select>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<resultMap type="Hospital_infor" id="hosAndReg">
+	<id column="medical_record" property="medical_record"/>
+	<result column="caregiver" property="caregiver"/>
+	<result column="bed_id" property="bed_id"/>
+	<result column="pay_the_deposit" property="pay_the_deposit"/>
+	<result column="state_illness" property="state_illness"/>
+	
+<association property="registration" javaType="Registration_infor">
+	<id column="medical_record" property="medical_record"/>
+	<result column="r_name" property="name"/>
+	<result column="r_certificate_type" property="certificate_type"/>
+	<result column="r_ID_num" property="ID_num"/>
+	<result column="social_safe_num" property="social_safe_num"/>
+	<result column="r_phone" property="phone"/>
+	<result column="self_paying" property="self_paying"/>
+	<result column="r_sex" property="sex"/>
+	<result column="age" property="age"/>
+	<result column="doctor_id" property="doctor_id"/>
+</association>
+
+<association property="doctor" javaType="Doctor">
+	<id column="did" property="id"/>
+	<result column="name" property="name"/>
+</association>
+
+<association property="section" javaType="Section">
+	<id column="sid" property="id"/>
+	<result column="seccp_num" property="seccp_num"/>
+	<result column="secco_name" property="secco_name"/>
+	
+</association>
+</resultMap>
+<select id="insertFindAll" resultMap="hosAndReg" parameterType="String">
+	SELECT
+	h.medical_record,
+	r.medical_record,
+	r.name r_name,
+	r.certificate_type r_certificate_type,
+	r.ID_num r_ID_num,
+	r.social_safe_num,
+	r.time,
+	r.phone r_phone,
+	r.self_paying,
+	r.sex r_sex,
+	r.age r_age, 
+	d.name,
+	s.secco_name
+FROM	
+	hospital_infor h,
+	registration_infor r,
+	doctor d,
+	section s 
+	<where>
+	h.medical_record = r.medical_record
+	AND r.section_id = s.id 
+	AND r.doctor_id = d.id 
+	and h.medical_record = #{h.medical_record}
+	</where>
+</select>
+
+
+<insert id="insertHospital_infor" parameterType="Hospital_infor" >
+	insert into hospital_infor (caregiver,bed_id,pay_the_deposit,state_illness) values(#{caregiver}, #{bed_id}, #{pay_the_deposit}, #{state_illness})
+</insert>
+
+
+
+
+
+
+<delete id="deleteById" parameterType="String">
+	delete from hospital_infor
+	<where>
+		medical_record = #{medical_record}
+	</where>
+</delete>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</mapper>
